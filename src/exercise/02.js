@@ -7,10 +7,10 @@ function Greeting({initialName = ''}) {
   // 🐨 initialize the state to the value from localStorage
   // 💰 window.localStorage.getItem('name') ?? initialName
 
-  const nameInLocalStorage = window.localStorage.getItem('name');
   const [name, setName] = React.useState(
-    nameInLocalStorage ?? initialName
+    () => window.localStorage.getItem('name') ?? initialName
   );
+
 
   // 🐨 Here's where you'll use `React.useEffect`.
   // The callback should set the `name` in localStorage.
