@@ -36,13 +36,13 @@ function useLocalStorage(
     if(valueInLocalStorage){
       return deserialize(valueInLocalStorage)
     }
-    return defaultValue
+    return typeof defaultValue === 'function' ? defaultValue() : defaultValue
   });
 
   React.useEffect(() => {
-     window.localStorage.setItem('name', serialize(state));
+     window.localStorage.setItem(key, serialize(state));
      setState(state);
-  }, [state, serialize]);
+  }, [key, state, serialize]);
 
   return [state, setState];
 }
