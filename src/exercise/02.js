@@ -27,15 +27,22 @@ function Greeting({initialName = ''}) {
   );
 }
 
-function useLocalStorage(key, initialValue){
+function useLocalStorage(
+  key,
+  defaultValue ='',
+  {serialize = JSON.stringify, deserialize = JSON.parse} = {}){
   const [state, setState] = React.useState(() => {
-    return window.localStorage.getItem(key) ?? initialValue;
+    const valueInLocalStorage = window.localStorage.getItem(key);
+    if(valueInLocalStorage){
+      return deserialize(valueInLocalStorage)
+    }
+    return defaultValue
   });
 
   React.useEffect(() => {
-     window.localStorage.setItem('name', state);
+     window.localStorage.setItem('name', serialize(state));
      setState(state);
-  }, [state]);
+  }, [state, serialize]);
 
   return [state, setState];
 }
