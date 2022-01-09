@@ -28,16 +28,16 @@ function Greeting({initialName = ''}) {
 }
 
 function useLocalStorage(key, initialValue){
-  const [name, setName] = React.useState(() => {
+  const [state, setState] = React.useState(() => {
     return window.localStorage.getItem(key) ?? initialValue;
   });
 
   React.useEffect(() => {
-     window.localStorage.setItem('name', name);
-     setName(name);
-  }, [name]);
+     window.localStorage.setItem('name', state);
+     setState(state);
+  }, [state]);
 
-  return [name, setName];
+  return [state, setState];
 }
 
 function App() {
