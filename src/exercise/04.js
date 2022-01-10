@@ -2,10 +2,11 @@
 // http://localhost:3000/isolated/exercise/04.js
 
 import * as React from 'react'
+import {useEffect} from 'react'
 
 function Board() {
   // 🐨 squares is the state for this component. Add useState for squares
-  const [squares, setSquares] = React.useState(() => Array(9).fill(null));
+  const [squares, setSquares] = useLocalStorage('squares', () => Array(9).fill(null));
   let nextValue = calculateNextValue(squares);
   let winner = calculateWinner(squares);
   let status = calculateStatus(winner, squares, nextValue);
@@ -125,6 +126,36 @@ function calculateWinner(squares) {
     }
   }
   return null
+}
+
+function useLocalStorage(
+  key = '',
+  initialValue = '',
+  {serialize = JSON.stringify, deserialize = JSON.parse} = {}){
+  const valueInLocalStorage = window.localStorage.getItem(key);
+  const [value, setValue] = React.useState(() => {
+    if(valueInLocalStorage){
+      try{
+        return deserialize(valueInLocalStorage)
+      }catch(e){
+        console.error(e);
+      }
+    }else{
+      return initialValue
+    }
+  });
+
+    useEffect(() => {
+      let serializedValue;
+      try{
+        serializedValue = serialize(value);
+      }catch(e){
+        console.error(e);
+      }
+      window.localStorage.setItem(key, serializedValue);
+    }, [serialize, key, value]);
+
+    return [value, setValue];
 }
 
 function App() {
